@@ -23,6 +23,25 @@ func (stack *Stack[T]) Push(item T) bool {
 	return true
 }
 
+func (stack *Stack[T]) DynamicPush(item T) bool {
+	if stack.Full() {
+		var (
+			oldLength   = stack.length
+			newLength   = oldLength * 2
+			newElements = make([]T, newLength)
+		)
+		// Copy old-element to new-element
+		for i := uint32(0); i < oldLength; i++ {
+			newElements[i] = stack.elements[i]
+		}
+		stack.elements = newElements
+		stack.length = newLength
+	}
+	stack.top++
+	stack.elements[stack.top] = item
+	return true
+}
+
 func (stack *Stack[T]) Peek() (item T, ok bool) {
 	if stack.Empty() {
 		return
